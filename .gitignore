@@ -1,0 +1,18 @@
+# Node / npm
+node_modules/
+
+# Vite build output
+frontend/dist/
+frontend/dist-ssr/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.suo
+*.sw?
