@@ -95,12 +95,16 @@
     <footer class="app-footer">
       <p>🌤️ WeatherCast &mdash; powered by mock data &mdash; {{ currentYear }}</p>
     </footer>
+
+    <!-- Draggable local weather widget (fixed overlay) -->
+    <LocalWeatherWidget />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import ForecastCard from '@/components/ForecastCard.vue'
+import LocalWeatherWidget from '@/components/LocalWeatherWidget.vue'
 import { getSupportedCities, getWeather } from '@/services/weatherData'
 import type { CityWeather } from '@/types/weather'
 

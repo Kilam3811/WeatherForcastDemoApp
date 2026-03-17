@@ -5,24 +5,26 @@ interface CityConfig {
   country: string
   baseTemp: number
   summaries: string[]
+  lat: number
+  lon: number
 }
 
 const CITIES: Record<string, CityConfig> = {
-  'New York':    { country: 'US', baseTemp: 15, summaries: ['Partly Cloudy', 'Sunny', 'Overcast', 'Light Rain', 'Clear'] },
-  'London':      { country: 'GB', baseTemp: 10, summaries: ['Overcast', 'Rainy', 'Partly Cloudy', 'Foggy', 'Light Rain'] },
-  'Tokyo':       { country: 'JP', baseTemp: 18, summaries: ['Sunny', 'Clear', 'Partly Cloudy', 'Humid', 'Warm'] },
-  'Sydney':      { country: 'AU', baseTemp: 22, summaries: ['Sunny', 'Clear', 'Partly Cloudy', 'Breezy', 'Warm'] },
-  'Paris':       { country: 'FR', baseTemp: 12, summaries: ['Partly Cloudy', 'Overcast', 'Light Rain', 'Clear', 'Breezy'] },
-  'Berlin':      { country: 'DE', baseTemp: 8,  summaries: ['Overcast', 'Light Rain', 'Partly Cloudy', 'Cold', 'Windy'] },
-  'Dubai':       { country: 'AE', baseTemp: 38, summaries: ['Sunny', 'Hot', 'Clear', 'Hazy', 'Scorching'] },
-  'Toronto':     { country: 'CA', baseTemp: 5,  summaries: ['Partly Cloudy', 'Snowy', 'Cold', 'Overcast', 'Clear'] },
-  'Mumbai':      { country: 'IN', baseTemp: 30, summaries: ['Humid', 'Partly Cloudy', 'Sunny', 'Hazy', 'Warm'] },
-  'São Paulo':   { country: 'BR', baseTemp: 25, summaries: ['Partly Cloudy', 'Sunny', 'Light Rain', 'Warm', 'Breezy'] },
-  'Mexico City': { country: 'MX', baseTemp: 20, summaries: ['Partly Cloudy', 'Sunny', 'Light Rain', 'Clear', 'Breezy'] },
-  'Cairo':       { country: 'EG', baseTemp: 32, summaries: ['Sunny', 'Hot', 'Clear', 'Hazy', 'Dusty'] },
-  'Moscow':      { country: 'RU', baseTemp: -2, summaries: ['Snowy', 'Cold', 'Overcast', 'Freezing', 'Blizzard'] },
-  'Beijing':     { country: 'CN', baseTemp: 14, summaries: ['Smoggy', 'Partly Cloudy', 'Clear', 'Windy', 'Hazy'] },
-  'Los Angeles': { country: 'US', baseTemp: 24, summaries: ['Sunny', 'Clear', 'Partly Cloudy', 'Breezy', 'Warm'] },
+  'New York':    { country: 'US', baseTemp: 15, lat: 40.7128,  lon: -74.0060,  summaries: ['Partly Cloudy', 'Sunny', 'Overcast', 'Light Rain', 'Clear'] },
+  'London':      { country: 'GB', baseTemp: 10, lat: 51.5074,  lon: -0.1278,   summaries: ['Overcast', 'Rainy', 'Partly Cloudy', 'Foggy', 'Light Rain'] },
+  'Tokyo':       { country: 'JP', baseTemp: 18, lat: 35.6762,  lon: 139.6503,  summaries: ['Sunny', 'Clear', 'Partly Cloudy', 'Humid', 'Warm'] },
+  'Sydney':      { country: 'AU', baseTemp: 22, lat: -33.8688, lon: 151.2093,  summaries: ['Sunny', 'Clear', 'Partly Cloudy', 'Breezy', 'Warm'] },
+  'Paris':       { country: 'FR', baseTemp: 12, lat: 48.8566,  lon: 2.3522,    summaries: ['Partly Cloudy', 'Overcast', 'Light Rain', 'Clear', 'Breezy'] },
+  'Berlin':      { country: 'DE', baseTemp: 8,  lat: 52.5200,  lon: 13.4050,   summaries: ['Overcast', 'Light Rain', 'Partly Cloudy', 'Cold', 'Windy'] },
+  'Dubai':       { country: 'AE', baseTemp: 38, lat: 25.2048,  lon: 55.2708,   summaries: ['Sunny', 'Hot', 'Clear', 'Hazy', 'Scorching'] },
+  'Toronto':     { country: 'CA', baseTemp: 5,  lat: 43.6532,  lon: -79.3832,  summaries: ['Partly Cloudy', 'Snowy', 'Cold', 'Overcast', 'Clear'] },
+  'Mumbai':      { country: 'IN', baseTemp: 30, lat: 19.0760,  lon: 72.8777,   summaries: ['Humid', 'Partly Cloudy', 'Sunny', 'Hazy', 'Warm'] },
+  'São Paulo':   { country: 'BR', baseTemp: 25, lat: -23.5505, lon: -46.6333,  summaries: ['Partly Cloudy', 'Sunny', 'Light Rain', 'Warm', 'Breezy'] },
+  'Mexico City': { country: 'MX', baseTemp: 20, lat: 19.4326,  lon: -99.1332,  summaries: ['Partly Cloudy', 'Sunny', 'Light Rain', 'Clear', 'Breezy'] },
+  'Cairo':       { country: 'EG', baseTemp: 32, lat: 30.0444,  lon: 31.2357,   summaries: ['Sunny', 'Hot', 'Clear', 'Hazy', 'Dusty'] },
+  'Moscow':      { country: 'RU', baseTemp: -2, lat: 55.7558,  lon: 37.6173,   summaries: ['Snowy', 'Cold', 'Overcast', 'Freezing', 'Blizzard'] },
+  'Beijing':     { country: 'CN', baseTemp: 14, lat: 39.9042,  lon: 116.4074,  summaries: ['Smoggy', 'Partly Cloudy', 'Clear', 'Windy', 'Hazy'] },
+  'Los Angeles': { country: 'US', baseTemp: 24, lat: 34.0522,  lon: -118.2437, summaries: ['Sunny', 'Clear', 'Partly Cloudy', 'Breezy', 'Warm'] },
 }
 
 const ICONS: Record<string, string> = {
@@ -117,6 +119,32 @@ function formatDate(daysFromNow: number): string {
 // ─── Public API ────────────────────────────────────────────────────────────────
 export function getSupportedCities(): string[] {
   return Object.keys(CITIES).sort()
+}
+
+// Haversine distance in km between two lat/lon points
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371
+  const toRad = (d: number) => (d * Math.PI) / 180
+  const dLat = toRad(lat2 - lat1)
+  const dLon = toRad(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+// Returns weather for the nearest city in the catalogue to the given coordinates
+export function getWeatherByCoords(lat: number, lon: number): CityWeather | null {
+  let nearestCity = ''
+  let minDist = Infinity
+  for (const [name, cfg] of Object.entries(CITIES)) {
+    const dist = haversineKm(lat, lon, cfg.lat, cfg.lon)
+    if (dist < minDist) {
+      minDist = dist
+      nearestCity = name
+    }
+  }
+  return nearestCity ? getWeather(nearestCity) : null
 }
 
 export function getWeather(cityName: string): CityWeather | null {
