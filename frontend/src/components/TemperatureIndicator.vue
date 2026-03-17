@@ -1,5 +1,5 @@
 <template>
-  <div class="temp-indicator" :aria-label="`Temperature indicator: ${currentTemp}°C, ${categoryLabel}`">
+  <div class="temp-indicator">
     <!-- Category label -->
     <div class="temp-category">
       <span class="category-icon">{{ categoryIcon }}</span>
@@ -15,7 +15,7 @@
           left: lowPosition + '%',
           width: (highPosition - lowPosition) + '%',
         }"
-        :aria-label="`Today's range: ${safeLow}°C – ${safeHigh}°C`"
+        aria-hidden="true"
       ></div>
 
       <!-- Current temperature marker -->
