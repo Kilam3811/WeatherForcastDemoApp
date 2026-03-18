@@ -80,6 +80,14 @@
               <span class="stat-label">🌬️ Wind</span>
               <span class="stat-value">{{ weather.windSpeed }} km/h {{ weather.windDirection }}</span>
             </div>
+            <div class="stat stat--indicator">
+              <span class="stat-label">🌡️ Temperature</span>
+              <TemperatureIndicator
+                :current-temp="weather.currentTemp"
+                :today-high="weather.forecast[0]?.tempHigh ?? weather.currentTemp"
+                :today-low="weather.forecast[0]?.tempLow ?? weather.currentTemp"
+              />
+            </div>
           </div>
         </section>
 
@@ -101,6 +109,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import ForecastCard from '@/components/ForecastCard.vue'
+import TemperatureIndicator from '@/components/TemperatureIndicator.vue'
 import { getSupportedCities, getWeather } from '@/services/weatherData'
 import type { CityWeather } from '@/types/weather'
 
@@ -397,8 +406,9 @@ function fetchWeather(city: string) {
 .unit            { font-size: 2rem; font-weight: 400; }
 .feels-like      { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 0.3rem; }
 .stat            { display: flex; flex-direction: column; }
-.stat-label      { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-label      { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
 .stat-value      { font-size: 1.05rem; font-weight: 600; }
+.stat--indicator { flex: 1 1 100%; min-width: 0; }
 
 /* Forecast */
 .section-title {
