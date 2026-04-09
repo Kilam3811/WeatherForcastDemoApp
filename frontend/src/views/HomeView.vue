@@ -89,6 +89,17 @@
               />
             </div>
           </div>
+
+          <!-- Social share buttons -->
+          <div class="share-row" v-if="weather">
+            <div class="share-label">Share:</div>
+            <div class="share-buttons">
+              <button class="share-btn" @click="shareToTwitter" aria-label="Share to Twitter">🐦 Tweet</button>
+              <button class="share-btn" @click="shareToFacebook" aria-label="Share to Facebook">📘 Share</button>
+              <button class="share-btn" @click="shareToLinkedIn" aria-label="Share to LinkedIn">🔗 LinkedIn</button>
+              <button class="share-btn" @click="copyShareLink" aria-label="Copy link">🔁 Copy</button>
+            </div>
+          </div>
         </section>
 
         <section class="forecast-section">
@@ -177,6 +188,51 @@ function fetchWeather(city: string) {
       error.value = `No weather data available for "${city}".`
     }
   }, 400)
+}
+
+// Share helpers
+
+const shareText = computed(() => {
+  if (!weather.value) return ''
+  return `${weather.value.city} (${weather.value.country}) — ${weather.value.currentTemp}°C, ${weather.value.summary}`
+})
+
+function openShareUrl(url: string) {
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
+
+function shareToTwitter() {
+  if (!shareText.value) return
+  const t = encodeURIComponent(shareText.value + ' #WeatherCast')
+  const url = `https://twitter.com/intent/tweet?text=${t}`
+  openShareUrl(url)
+}
+
+function shareToFacebook() {
+  if (!shareText.value) return
+  const u = encodeURIComponent(window.location.href)
+  const quote = encodeURIComponent(shareText.value)
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${u}&quote=${quote}`
+  openShareUrl(url)
+}
+
+function shareToLinkedIn() {
+  if (!shareText.value) return
+  const u = encodeURIComponent(window.location.href)
+  const title = encodeURIComponent(shareText.value)
+  const url = `https://www.linkedin.com/sharing/share-offsite/?url=${u}&title=${title}`
+  openShareUrl(url)
+}
+
+function copyShareLink() {
+  const text = shareText.value ? shareText.value + ' ' + window.location.href : window.location.href
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => alert('Share text copied to clipboard'))
+      .catch(() => alert('Unable to copy to clipboard'))
+  } else {
+    // Fallback: prompt the user to copy
+    window.prompt('Copy the share text:', text)
+  }
 }
 </script>
 
@@ -409,6 +465,22 @@ function fetchWeather(city: string) {
 .stat-label      { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; }
 .stat-value      { font-size: 1.05rem; font-weight: 600; }
 .stat--indicator { flex: 1 1 100%; min-width: 0; }
+
+/* Share */
+.share-row { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+.share-label { color: rgba(255,255,255,0.75); font-weight: 600; font-size: 0.9rem; }
+.share-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.share-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s, transform 0.15s;
+}
+.share-btn:hover { background: rgba(255,255,255,0.22); transform: translateY(-2px); }
 
 /* Forecast */
 .section-title {
